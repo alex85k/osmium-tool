@@ -170,12 +170,15 @@ bool CommandApplyChanges::run() {
         osmium::object_id_type id = 0;
         bool keep_deleted = !m_remove_deleted;
 
-        auto output_it = boost::make_function_output_iterator([&out, &id, keep_deleted](const osmium::OSMObject& obj) {
-            if (obj.id() != id) {
+
+        auto *pOut = &out;
+        auto *pId = &id;
+        auto output_it = boost::make_function_output_iterator([pOut, pId, keep_deleted](const osmium::OSMObject& obj) {
+            if (obj.id() != *pId) {
                 if (keep_deleted || obj.visible()) {
-                    *out = obj;
+                    **pOut = obj;
                 }
-                id = obj.id();
+                *pId = obj.id();
             }
         });
 
