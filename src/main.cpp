@@ -41,12 +41,20 @@ enum return_code : int {
     fatal = 2
 };
 
+#ifdef _WIN32
+#define SEP "\\"
+#define EXE "osmium.exe"
+#else
+#define SEP "/"
+#define EXE "osmium"
+#endif
+
 int main(int argc, char *argv[]) {
     std::string command = argv[0];
 
     // remove path from command
-    if (command.find_last_of("/") != std::string::npos) {
-        command = command.substr(command.find_last_of("/") + 1);
+    if (command.find_last_of(SEP) != std::string::npos) {
+        command = command.substr(command.find_last_of(SEP) + 1);
     }
 
     std::vector<std::string> arguments;
@@ -55,7 +63,7 @@ int main(int argc, char *argv[]) {
         arguments.push_back(argv[i]);
     }
 
-    if (command == "osmium") {
+    if (command == EXE) {
         if (arguments.size() == 0) {
             command = "help";
         } else {
